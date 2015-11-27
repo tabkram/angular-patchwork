@@ -10,10 +10,21 @@
 		      $get: ['$injector', '$rootScope', '$q', '$document', '$animate', '$templateRequest', '$controller', '$compile',
 		        function ($injector, $rootScope, $q, $document, $animate, $templateRequest, $controller, $compile) {
 		    	  return { 
-		    		  		open : open 
+		    		  		open : open,
+		    		  		close : close
 		    		  	 };
 
 		          // BEGIN : open sidesplit function
+		    		  	 
+		    	  function close(sideSplitOptions){
+		    		  if(sideSplitOptions.id){
+		    			  var appendToElement = sideSplitOptions.id;
+		    			  	  if(sideSplitOptions.message) console.log("closing message", sideSplitOptions.messge);
+	                    	  appendToElement.html('');
+//	                    	  $animate.leave(appendToElement);
+		    		  } 
+		    	  }
+		    	  
 		          function open(sideSplitOptions){
 		        	  var sideSplitScope = (sideSplitOptions.scope || $rootScope).$new();
 		        	  var ctrlInstance, ctrlLocals = {};
@@ -45,7 +56,10 @@
 			                      
 			                      var angularDomEl = angular.element('<div></div>');
 			                      angularDomEl.html(tplAndVars[0]);
-			                      
+			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
+			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
+			                        $animate.addClass(angularDomEl, 'sidesplit '+ positionClass);	
+			                        
 			                      var appendToElement = sideSplitOptions.appendTo || $document.find('body').eq(0);
 			                      if(sideSplitOptions.isAppend != true){
 			                    	  appendToElement.html('');
@@ -55,9 +69,9 @@
 			                        $compile(angularDomEl)(sideSplitScope);
 			                        
 			                        
-			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
-			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
-			                        $animate.addClass(appendToElement, 'sidesplit '+ positionClass);		                        
+//			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
+//			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
+//			                        $animate.addClass(appendToElement, 'sidesplit '+ positionClass);		                        
 			                      });
 
 			                });
