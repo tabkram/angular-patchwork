@@ -1,0 +1,23 @@
+
+.sidesplit{
+     overflow: hidden;	
+     background-color: #ccc;
+}
+
+.sidesplit-right{
+	 width: 50%;
+	 height: 100%;
+	 float: right;	
+}
+
+.sidesplit-left{
+	 width: 50%;
+	 height: 100%;
+	 float: left;	
+}
+
+.sidesplit-abs{
+	position: absolute;
+    top: 0;
+    z-index: 5000;
+}
