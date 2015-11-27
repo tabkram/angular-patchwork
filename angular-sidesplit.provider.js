@@ -22,23 +22,19 @@
 
 		          // BEGIN : add open callBackFunction
 		    	  function addOpenCallBack(element,callback){
-		    		  if(angular.isDefined(self.openCallBacks[element])){
-		    			  self.openCallBacks[element].push(callback) ;
-		    		  } else {
-		    			  self.openCallBacks[element] = callback ;
+		    		  if(!angular.isDefined(self.openCallBacks[element])){
+		    			  self.openCallBacks[element] = [];
 		    		  }
-
+		    		  self.openCallBacks[element].push(callback) ;
 		    	  }
 		          // END : add open callBackFunction
 		    	  
 		          // BEGIN : add close callBackFunction
 		    	  function addCloseCallBack(element, callback){
-		    		  if(angular.isDefined(self.closeCallBacks[element])){
-		    			  self.closeCallBacks[element].push(callback) ;
-		    		  } else {
-		    			  self.closeCallBacks[element] = []
-		    			  self.closeCallBacks[element].push(callback);
+		    		  if(!angular.isDefined(self.closeCallBacks[element])){
+		    			  self.closeCallBacks[element] = [];
 		    		  }
+		    		  self.closeCallBacks[element].push(callback);
 		    	  }
 		          // END : add close callBackFunction
 		    	  
@@ -99,6 +95,9 @@
 			                      .then(function() {
 			                        $compile(angularDomEl)(sideSplitScope);
 			                        
+			                    	angular.forEach(self.openCallBacks[appendToElement],function(callback, key){
+			                    		  callback();
+			                    	});
 			                        
 //			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
 //			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
