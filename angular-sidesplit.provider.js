@@ -9,22 +9,53 @@
 		      },
 		      $get: ['$injector', '$rootScope', '$q', '$document', '$animate', '$templateRequest', '$controller', '$compile',
 		        function ($injector, $rootScope, $q, $document, $animate, $templateRequest, $controller, $compile) {
+		    	  var self = this;
+		    	  this.openCallBacks = {};
+		    	  this.closeCallBacks = {};
+		    	  
 		    	  return { 
 		    		  		open : open,
-		    		  		close : close
+		    		  		close : close,
+		    		  		addOpenCallBack: addOpenCallBack,
+		    		  		addCloseCallBack: addCloseCallBack
 		    		  	 };
 
-		          // BEGIN : open sidesplit function
-		    		  	 
+		          // BEGIN : add open callBackFunction
+		    	  function addOpenCallBack(element,callback){
+		    		  if(angular.isDefined(self.openCallBacks[element])){
+		    			  self.openCallBacks[element].push(callback) ;
+		    		  } else {
+		    			  self.openCallBacks[element] = callback ;
+		    		  }
+
+		    	  }
+		          // END : add open callBackFunction
+		    	  
+		          // BEGIN : add close callBackFunction
+		    	  function addCloseCallBack(element, callback){
+		    		  if(angular.isDefined(self.closeCallBacks[element])){
+		    			  self.closeCallBacks[element].push(callback) ;
+		    		  } else {
+		    			  self.closeCallBacks[element] = []
+		    			  self.closeCallBacks[element].push(callback);
+		    		  }
+		    	  }
+		          // END : add close callBackFunction
+		    	  
+		          // BEGIN : close sidesplit function
 		    	  function close(sideSplitOptions){
 		    		  if(sideSplitOptions.id){
 		    			  var appendToElement = sideSplitOptions.id;
-		    			  	  if(sideSplitOptions.message) console.log("closing message", sideSplitOptions.messge);
+		    			  	  if(sideSplitOptions.message) {console.log("closing message", sideSplitOptions.message)};
 	                    	  appendToElement.html('');
+	                    	  angular.forEach(self.closeCallBacks[sideSplitOptions.id],function(callback, key){
+	                    		  callback();
+	                    	  });
 //	                    	  $animate.leave(appendToElement);
 		    		  } 
 		    	  }
-		    	  
+		          // END : close sidesplit function
+		          // BEGIN : open sidesplit function		    	  
 		          function open(sideSplitOptions){
 		        	  var sideSplitScope = (sideSplitOptions.scope || $rootScope).$new();
 		        	  var ctrlInstance, ctrlLocals = {};
