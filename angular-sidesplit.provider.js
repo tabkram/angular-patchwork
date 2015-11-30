@@ -57,7 +57,9 @@
 		        	  var ctrlInstance, ctrlLocals = {};
 		        	  var resolveIter = 1;
 		        	  ctrlLocals.$scope =  sideSplitScope ;
-		              
+		        	  
+		        	  $animate.enabled(true);
+		        	  
 		              var templateAndResolvePromise =
 		                  $q.all([getTemplatePromise(sideSplitOptions)].concat(getResolvePromises(sideSplitOptions.resolve)));
 
@@ -95,9 +97,21 @@
 			                      .then(function() {
 			                        $compile(angularDomEl)(sideSplitScope);
 			                        
-			                    	angular.forEach(self.openCallBacks[appendToElement],function(callback, key){
+			                        if(sideSplitOptions.hideOnClickout == true){
+				                        window.onclick = function() {
+				                        	close({ 
+				            					id:  appendToElement,
+				            					message :"closed with click out!"
+				            				})
+				                        };
+			                        }
+			                        
+			                        // begin : running callBacks
+			                        angular.forEach(self.openCallBacks[appendToElement],function(callback, key){
 			                    		  callback();
 			                    	});
+			                        sideSplitOptions.openCallBack();
+			                        // end : running callBacks			                    	
 			                        
 //			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
 //			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
