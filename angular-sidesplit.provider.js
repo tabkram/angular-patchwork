@@ -54,6 +54,11 @@
 		          // BEGIN : open sidesplit function		    	  
 		          function open(sideSplitOptions){
 		        	  var sideSplitScope = (sideSplitOptions.scope || $rootScope).$new();
+		        	  var isClickInsideSideSplit = false;
+		        	  sideSplitScope.clickedDomEl = function(){
+                      	//console.log("clicked side menu");
+                      	isClickInsideSideSplit = true;
+                      }
 		        	  var ctrlInstance, ctrlLocals = {};
 		        	  var resolveIter = 1;
 		        	  ctrlLocals.$scope =  sideSplitScope ;
@@ -83,7 +88,7 @@
 			                    	  $compile(template)(sideSplitScope);
 			                      }
 			                      
-			                      var angularDomEl = angular.element('<div></div>');
+			                      var angularDomEl = angular.element('<div ng-click="clickedDomEl()"></div>');
 			                      angularDomEl.html(tplAndVars[0]);
 			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
 			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
@@ -96,15 +101,19 @@
 			                      $animate.enter(angularDomEl, appendToElement)
 			                      .then(function() {
 			                        $compile(angularDomEl)(sideSplitScope);
-			                        
-			                        if(sideSplitOptions.hideOnClickout == true){
-				                        window.onclick = function() {
-				                        	close({ 
-				            					id:  appendToElement,
-				            					message :"closed with click out!"
-				            				})
-				                        };
-			                        }
+
+			                        window.onclick = function() {
+			                        	if(sideSplitOptions.hideOnClickout == true){
+				                        	if(isClickInsideSideSplit == false){
+				                        		close({ 
+				                        			id:  appendToElement,
+				                        			message :"closed with click out!"
+				                        		});
+				                        	} else if(isClickInsideSideSplit == true){
+				                        		isClickInsideSideSplit = false;
+				                        	}
+			                        	}
+			                        };
 			                        
 			                        // begin : running callBacks
 			                        angular.forEach(self.openCallBacks[appendToElement],function(callback, key){
