@@ -119,7 +119,9 @@
 			                        angular.forEach(self.openCallBacks[appendToElement],function(callback, key){
 			                    		  callback();
 			                    	});
-			                        sideSplitOptions.openCallBack();
+			                        if(angular.isFunction(sideSplitOptions.openCallBack)){
+			                        	sideSplitOptions.openCallBack();
+			                        }
 			                        // end : running callBacks			                    	
 			                        
 //			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
