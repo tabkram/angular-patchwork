@@ -94,6 +94,10 @@
 			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
 			                        $animate.addClass(angularDomEl, 'sidesplit '+ positionClass);	
 			                        
+			                        if(sideSplitOptions.width){
+			                        	angularDomEl.css("width", sideSplitOptions.width);	
+			                        }
+			                        
 			                      var appendToElement = sideSplitOptions.appendTo || $document.find('body').eq(0);
 			                      if(sideSplitOptions.isAppend != true){
 			                    	  appendToElement.html('');
