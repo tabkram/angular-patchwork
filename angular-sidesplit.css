@@ -1,23 +1,33 @@
-
-.sidesplit{
-     overflow: hidden;	
-     background-color: #ccc;
+.sidesplit {
+	overflow: hidden;
+	background-color: #ccc;
 }
 
-.sidesplit-right{
-	 width: 50%;
-	 height: 100%;
-	 float: right;	
-}
-
-.sidesplit-left{
-	 width: 50%;
-	 height: 100%;
-	 float: left;	
-}
-
-.sidesplit-abs{
+.sidesplit-right {
+	width: 50%;
+	height: 100%;
+	float: right;
+	padding: 5px;
 	position: absolute;
-    top: 0;
-    z-index: 5000;
+	background-color: #E2E2E2;
+	right: 0;
+	z-index: 2;
+}
+
+.sidesplit-left {
+	width: 50%;
+	height: 100%;
+	position: absolute;
+	float: left;
+}
+
+.sidesplit-abs {
+	position: absolute;
+	top: 0;
+	z-index: 5000;
+}
+
+
+.sidesplit:focus {
+    outline: none;
 }
