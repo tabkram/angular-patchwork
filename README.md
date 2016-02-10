@@ -22,6 +22,7 @@ In the controller add :
 						appendTo : angular.element('#splitscreen'),
 						isAbsolute : true,
 						hideOnClickout: true,
+						width : "25%", //default 50% (you can also use pixels)
 						position : "right",
 						resolve: {
 							...
