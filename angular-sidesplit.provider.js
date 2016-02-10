@@ -91,11 +91,17 @@
 			                      var angularDomEl = angular.element('<div ng-click="clickedDomEl()"></div>');
 			                      angularDomEl.html(tplAndVars[0]);
 			                        var positionClass =  sideSplitOptions.position ? 'sidesplit-' + sideSplitOptions.position : 'sidesplit-right';
-			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs" : "";
+			                        positionClass += sideSplitOptions.isAbsolute == true ? " sidesplit-abs " : "";
+			                        positionClass += sideSplitOptions.animation == "right"  ? " sidesplit-right-animation " : "" ;
 			                        $animate.addClass(angularDomEl, 'sidesplit '+ positionClass);	
+			                        
+			                        
 			                        
 			                        if(sideSplitOptions.width){
 			                        	angularDomEl.css("width", sideSplitOptions.width);	
+			                        }
+			                        if(sideSplitOptions.height){
+			                        	angularDomEl.css("height", sideSplitOptions.height);	
 			                        }
 			                        
 			                      var appendToElement = sideSplitOptions.appendTo || $document.find('body').eq(0);
