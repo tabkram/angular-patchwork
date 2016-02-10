@@ -23,7 +23,9 @@ In the controller add :
 						isAbsolute : true,
 						hideOnClickout: true,
 						width : "25%", //default 50% (you can also use pixels)
+						height: "800px", //default 100% (you can also use %
 						position : "right",
+						animation : "right", //no animation by default
 						resolve: {
 							...
 						},
