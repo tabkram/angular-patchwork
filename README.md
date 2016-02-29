@@ -61,9 +61,31 @@ Optionally, you can add several open and close callback methods :
 			$sideSplit.addOpenCallBack(angular.element('#splitscreen'),function(){
 				// executed callback function
 			});
-				    	   			$sideSplit.addCloseCallBack(angular.element('#splitscreen'),function(){
+			$sideSplit.addCloseCallBack(angular.element('#splitscreen'),function(){
 				 // executed callback function
 			});
+	    	   	
+```
+
+To collapse the **sidesplit** :
+
+
+```javascript
+
+            $sideSplit.collapse({ 
+                 id: angular.element('#splitscreen'),
+                 message :"collapsed!"
+            });   
+				
+```
+
+As for the close method, you can also add several collapse callback methods :
+
+```javascript
+
+		$sideSplit.addCollapseCallBack(angular.element('#splitscreen'), function(isCollapsedRetour){
+				$scope.isCollapsed = !$scope.isCollapsed ;
+		});
 	    	   	
 ```
 
