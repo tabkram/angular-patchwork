@@ -1,0 +1,18 @@
+{
+  "name": "angluar-sidesplit",
+  "description": "For side bar menu / split screen menu",
+  "main": "angular-sidesplit.provider.js",
+  "authors": [
+    "akram TABKA <akram.tabka@talanlabs.com>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
