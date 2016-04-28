@@ -1,6 +1,7 @@
 .sidesplit {
   overflow: hidden;
-  background-color: #ccc;
+  background-color: #E2E2E2;
+  border: 1px solid #ccc;
 }
 
 .sidesplit-right {

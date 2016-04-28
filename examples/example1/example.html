@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular-animate.js"></script>
+	<script src="example.controller.js"></script>
+	<script src="sidemenu.controller.js"></script>
+
+	<script src="../../angular-sidesplit.provider.js"></script>
+    <link href="../../angular-sidesplit.css" rel="stylesheet">
+
+<body ng-app="sidemenuApp" ng-controller="exampleController as exampleCtrl">
+	<div>
+		<h1>Side Split page example</h1>
+		<p>My first paragraph.</p>
+		<button ng-click="exampleCtrl.openSideSplit()">show Side Menu</button>
+	</div>
+	<div id="sidemenu"></div>
+</body>
+
+<script type='text/ng-template' id='sidemenuUrl'>
+<div stye="margin:20px;">
+<h1>Here im a side menu</h1>
+<button ng-click="sideMenuCtrl.closeSideSplit()">Close Side Menu</button>
+</div>
+</script>
+
+
+</html>
