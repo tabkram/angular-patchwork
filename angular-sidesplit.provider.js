@@ -158,9 +158,11 @@
 			                      if(sideSplitOptions.isAppend != true){
 			                    	  appendToElement.html('');
 			                      }
+
+			                      $compile(angularDomEl)(sideSplitScope);
+
 			                      $animate.enter(angularDomEl, appendToElement)
 			                      .then(function() {
-			                        $compile(angularDomEl)(sideSplitScope);
 
 			                        window.onclick = function() {
 			                        	if(sideSplitOptions.hideOnClickout == true){
