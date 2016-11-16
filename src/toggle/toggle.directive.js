@@ -1,8 +1,8 @@
 (function() {
     'use strict';
 
-angular.module('ongToggle', [])
-    .directive('ongToggle', function() {
+angular.module('pw-toggle', [])
+    .directive('pwToggle', function() {
 
         return {
             restrict: 'A',

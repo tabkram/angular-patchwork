@@ -1,7 +1,7 @@
 (function() {
 	'use strict';
 
-	angular.module("tap-detailField", ["template/field/text.html",
+	angular.module("pw-detailfield", ["template/field/text.html",
 	                                   "template/field/number.html",
 	                                   "template/field/textarea.html",
 	                                   "template/field/select.html",
@@ -12,7 +12,7 @@
 	                                   "template/field/timepicker.html",
 	                                   "template/field/datepicker.html"]);
 	
-	angular.module("tap-detailField").directive('detailField', detailField);
+	angular.module("pw-detailfield").directive('pwDetailfield', detailField);
 			
 	 function detailField($compile, $templateCache){
 		    return {

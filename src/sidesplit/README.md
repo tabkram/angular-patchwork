@@ -1,12 +1,12 @@
-# Angular-sidesplit 
+# Patchwork-sidesplit 
 ## For side bar menu / split screen menu
 ============
 
 ### To use it :
 
  1. Include .js and .css files to your index.html
- 2. Add **sidesplit** module to your app dependencies : `angular.module("sidemenuApp",['sidesplit'])`
- 3. Inject **$sideSplit** to your controller : `exampleController.$inject = ['$sideSplit'];` 
+ 2. Add **pw-sidesplit** module to your app dependencies : `angular.module("sidemenuApp",['pw-sidesplit'])`
+ 3. Inject **pwSidesplit** to your controller : `exampleController.$inject = ['pwSidesplit'];` 
 
 
  ### Here's a code sample:
@@ -16,7 +16,7 @@ In the controller add :
 
 ```javascript
 
-	$sideSplit.open({ 
+	pwSidesplit.open({ 
 						templateUrl: 'client/app/example.html',
 						controller: 'exampleController',
 						appendTo : angular.element('#splitscreen'),
@@ -41,12 +41,12 @@ In the template file :
 `<div id="splitscreen"></div>`
 
 
-Then to close the **sidesplit** :
+Then to close the **pw-sidesplit** :
 
 
 ```javascript
 
-				$sideSplit.close({ 
+				pwSidesplit.close({ 
 					id: angular.element('#splitscreen'),
 					message :"closed!"
 				});
@@ -58,10 +58,10 @@ Optionally, you can add several open and close callback methods :
 
 ```javascript
 
-			$sideSplit.addOpenCallBack(angular.element('#splitscreen'),function(){
+			pwSidesplit.addOpenCallBack(angular.element('#splitscreen'),function(){
 				// executed callback function
 			});
-			$sideSplit.addCloseCallBack(angular.element('#splitscreen'),function(){
+			pwSidesplit.addCloseCallBack(angular.element('#splitscreen'),function(){
 				 // executed callback function
 			});
 	    	   	
@@ -72,7 +72,7 @@ To collapse the **sidesplit** :
 
 ```javascript
 
-            $sideSplit.collapse({ 
+            pwSidesplit.collapse({ 
                  id: angular.element('#splitscreen'),
                  message :"collapsed!"
             });   
@@ -83,7 +83,7 @@ As for the close method, you can also add several collapse callback methods :
 
 ```javascript
 
-		$sideSplit.addCollapseCallBack(angular.element('#splitscreen'), function(isCollapsedRetour){
+		pwSidesplit.addCollapseCallBack(angular.element('#splitscreen'), function(isCollapsedRetour){
 				$scope.isCollapsed = !$scope.isCollapsed ;
 		});
 	    	   	

@@ -1,9 +1,9 @@
 (function() {
 	'use strict';
-	angular.module("sidesplit", []);
+	angular.module("pw-sidesplit", []);
 	
-	angular.module("sidesplit")
-	  .provider('$sideSplit', function() {
+	angular.module("pw-sidesplit")
+	  .provider('pwSidesplit', function() {
 		    var $sideSplitProvider = {
 		      options: {
 		      },
