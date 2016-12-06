@@ -1,33 +1,32 @@
 (function() {
     'use strict';
 
-angular.module('pw-fsexplorer', [])
+angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
     .constant('fsExplorerConfig', {
         templateUrl: null
     })
-    .directive('pwFsexplorer', function() {
+    .directive('pwFsexplorer', function($compile, $templateCache, fsExplorerService) {
         return {
             restrict: 'EA',
                 transclude: true,
-                template: '<ul {{options.ulClass}} >' +
-                            '<li ng-click="backToParent()">..</li>'+
-                            '<li ng-repeat="node in nodeList" ng-class="headClass(node)">' +
-                            '<i class="tree-branch-head" ng-class="iBranchClass()" ng-click="selectNodeHead(node)"></i>'+
-                            '<div class="tree-label {{options.labelClass}}" ng-click="selectNodeLabel(node)">{{node.name}}</div> ' +
-                            '</li>' +
-                            '</ul>',
                 scope: {
                     explorerModel: "="
                 },
-                controller: ['$scope', '$templateCache', '$interpolate', 'fsExplorerConfig','fsExplorerService', function ($scope, $templateCache, $interpolate, fsExplorerConfig, fsExplorerService) {
-                    $scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
+                link: function($scope, element, attrs, ctrl, transclude){
+                    compile($templateCache.get("template/explorerTpl.html"));
+                    function compile(template){
+                        $compile(template)($scope, function(_element,_scope) {
+                            element.replaceWith(_element);
+                            element = _element ;
+                        }); 
+                    }
+
+                     $scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
                             $scope.nodeList = fsExplorerService.getNodeListInParentFolder($scope.explorerModel,$scope.nodeList[0]);    
                         } else {
                             log.error("error: it should have at least pwdPointer");
-                            //error: it should have at least pwdPointer
-                            //$scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
                         }
                     } 
 
@@ -36,9 +35,25 @@ angular.module('pw-fsexplorer', [])
                             $scope.nodeList = fsExplorerService.getChildrenNodeList($scope.explorerModel,node);
                         }
                     }
-
-
-                }]
+                    transclude($scope, function(clone, scope) {
+                        scope.transcludedElement = angular.element('<div></div>').append(clone).html();
+                    });
+                }
+        }
+    })
+    .directive('pwNodeTransclude', function($compile) {
+        return {
+            restrict: 'EA',
+            replace: true,
+            template:'<div>{{nodeContent}}</div>',
+            transclude: true,
+            link: function($scope, $element, attrs, ctrl, transclude){
+                $scope.nodeContent = $scope.$parent.transcludedElement;
+                 $compile($element.html($scope.nodeContent))($scope, function(_element,_scope) {
+                            $element.replaceWith(_element);
+                            $element = _element ;
+                }); 
+            }
         }
     })
     .service('fsExplorerService', function() {
@@ -134,5 +149,17 @@ angular.module('pw-fsexplorer', [])
             return appendWithPwdPointer(childrenNodeList,node.id.toString());
         }
     })
+
+            angular.module("template/explorerTpl.html", []).run(["$templateCache", function($templateCache) {
+              $templateCache.put("template/explorerTpl.html",'<ul {{options.ulClass}} >' +
+                            '<li ng-click="backToParent()">..</li>'+
+                            '<li ng-repeat="node in nodeList" ng-class="headClass(node)">' +
+                            '<i class="tree-branch-head" ng-class="iBranchClass()" ng-click="selectNodeHead(node)"></i>'+
+                            '<div class="tree-label {{options.labelClass}}" ng-click="selectNodeLabel(node)">'+
+                            '<pw-node-transclude></pw-node-transclude>'+
+                            '</div> ' +
+                            '</li>' +
+                            '</ul>');
+            }]);
 
 })();
