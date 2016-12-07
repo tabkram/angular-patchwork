@@ -5,15 +5,24 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
     .constant('fsExplorerConfig', {
         templateUrl: null
     })
-    .directive('pwFsexplorer', function($compile, $templateCache, fsExplorerService) {
+    .directive('pwFsexplorer', function($compile, $templateCache, fsExplorerService, $http) {
         return {
             restrict: 'EA',
                 transclude: true,
                 scope: {
-                    explorerModel: "="
+                    explorerModel: "=",
+                    templateUrl:"="
                 },
                 link: function($scope, element, attrs, ctrl, transclude){
-                    compile($templateCache.get("template/explorerTpl.html"));
+                    if($scope.templateUrl != null){
+                        $http.get($scope.templateUrl).then(function(response) {
+                            $templateCache.put("template/explorerTpl.html", response.data);
+                            compile($templateCache.get("template/explorerTpl.html"));
+                        });
+                    } else{
+                       compile($templateCache.get("template/explorerTpl.html"));
+
+                    }
                     function compile(template){
                         $compile(template)($scope, function(_element,_scope) {
                             element.replaceWith(_element);
@@ -151,7 +160,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
     })
 
             angular.module("template/explorerTpl.html", []).run(["$templateCache", function($templateCache) {
-              $templateCache.put("template/explorerTpl.html",'<ul {{options.ulClass}} >' +
+              $templateCache.put("template/explorerTpl.html",'<ul id="pw-fsexplorer" {{options.ulClass}} >' +
                             '<li ng-click="backToParent()">..</li>'+
                             '<li ng-repeat="node in nodeList" ng-class="headClass(node)">' +
                             '<i class="tree-branch-head" ng-class="iBranchClass()" ng-click="selectNodeHead(node)"></i>'+
