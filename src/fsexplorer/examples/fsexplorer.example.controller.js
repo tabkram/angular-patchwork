@@ -47,6 +47,11 @@
 				parent: "111",
 			}
 		]
+
+		smCtrl.clickedNode = function(node){
+			smCtrl.selectedNode = node;
+		}
+
 		return smCtrl ;
 	}
 

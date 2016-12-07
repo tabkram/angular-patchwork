@@ -11,7 +11,8 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                 transclude: true,
                 scope: {
                     explorerModel: "=",
-                    templateUrl:"="
+                    templateUrl:"=",
+                    onNodeClick:"="
                 },
                 link: function($scope, element, attrs, ctrl, transclude){
                     if($scope.templateUrl != null){
@@ -30,7 +31,12 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                         }); 
                     }
 
-                     $scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
+                    transclude($scope, function(clone, scope) {
+                        scope.transcludedElement = angular.element('<div></div>').append(clone).html();
+                    });
+                },
+                controller($scope){
+                    $scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
                             $scope.nodeList = fsExplorerService.getNodeListInParentFolder($scope.explorerModel,$scope.nodeList[0]);    
@@ -42,11 +48,9 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     $scope.selectNodeLabel = function(node){
                         if(!node.__isFakeNode__){
                             $scope.nodeList = fsExplorerService.getChildrenNodeList($scope.explorerModel,node);
+                            if ($scope.onNodeClick) {$scope.onNodeClick(node);}
                         }
                     }
-                    transclude($scope, function(clone, scope) {
-                        scope.transcludedElement = angular.element('<div></div>').append(clone).html();
-                    });
                 }
         }
     })
