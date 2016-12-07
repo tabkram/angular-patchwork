@@ -20,10 +20,10 @@
   		<div class="col-md-12">
 			<h1>Patchwork-fsexplorer example</h1>
 		</div>
-		<hr>
 		<div class="col-md-6">
-		<pw-fsexplorer explorer-model="exampleCtrl.model" on-node-click="exampleCtrl.clickedNode">
-			node : <span>{{node.name}}</span>
+		<pw-fsexplorer explorer-model="exampleCtrl.model" on-node-click="exampleCtrl.clickedNode" is-clickable="exampleCtrl.isClickable">
+			<span ng-show="node.type=='folder'" class="glyphicon glyphicon-folder-close"></span>
+			 <span>{{node.name}}</span>
 			</pwFsexplorer>
 		</div>
 		<div class="col-md-6">

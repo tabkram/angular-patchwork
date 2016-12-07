@@ -12,7 +12,8 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                 scope: {
                     explorerModel: "=",
                     templateUrl:"=",
-                    onNodeClick:"="
+                    onNodeClick:"=",
+                    isClickable:"="
                 },
                 link: function($scope, element, attrs, ctrl, transclude){
                     if($scope.templateUrl != null){
@@ -46,9 +47,13 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     } 
 
                     $scope.selectNodeLabel = function(node){
-                        if(!node.__isFakeNode__){
-                            $scope.nodeList = fsExplorerService.getChildrenNodeList($scope.explorerModel,node);
-                            if ($scope.onNodeClick) {$scope.onNodeClick(node);}
+                        if(angular.isUndefined($scope.isClickable)|| (angular.isDefined($scope.isClickable) && $scope.isClickable(node) === true)){
+                            if(!node.__isFakeNode__){
+                                $scope.nodeList = fsExplorerService.getChildrenNodeList($scope.explorerModel,node);
+                                if ($scope.onNodeClick) {
+                                    $scope.onNodeClick(node);
+                                }
+                            }
                         }
                     }
                 }
