@@ -2,15 +2,20 @@
     'use strict';
 
 angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
-    .constant('fsExplorerConfig', {
-        templateUrl: null
+    .constant('fsConfig', {
+        templateUrl: null,
+        options : {
+            nodeId: "id",
+            parentNodeRef: "parent"
+        }
     })
-    .directive('pwFsexplorer', function($compile, $templateCache, fsExplorerService, $http) {
+    .directive('pwFsexplorer', function($compile, $templateCache, fsExplorerService, fsConfig, $http) {
         return {
             restrict: 'EA',
                 transclude: true,
                 scope: {
                     explorerModel: "=",
+                    explorerOptions: "=",
                     templateUrl:"=",
                     onNodeClick:"=",
                     isClickable:"="
@@ -37,6 +42,10 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     });
                 },
                 controller($scope){
+                    if($scope.explorerOptions) {
+                        fsConfig.options = $scope.explorerOptions ;
+                    }
+                    console.log("efzef", fsConfig.options);
                     $scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
@@ -74,7 +83,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
             }
         }
     })
-    .service('fsExplorerService', function() {
+    .service('fsExplorerService', function(fsConfig) {
         return {
             getParentNode: getParentNode,
             getRootNodeList: getRootNodeList,
@@ -106,10 +115,9 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
         function appendWithPwdPointer(NodeList, parent){
             var pwdPointer = {
                 __isFakeNode__ : true,
-                name : ".",
-                parent: parent,
+                name : "."
             };
-
+            pwdPointer[fsConfig.options.parentNodeRef] = parent;
             if(!findNodeBy(NodeList,pwdPointer)){
                 NodeList.unshift(pwdPointer);
             } 
@@ -120,7 +128,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
             var rootNodeList = [];
             var rootDefaultParent = "0" ;
             nodeList.forEach(function(iNode){
-                if(!iNode.__isFakeNode__ && iNode.parent.toString() === rootDefaultParent.toString()){
+                if(!iNode.__isFakeNode__ && iNode[fsConfig.options.parentNodeRef].toString() === rootDefaultParent.toString()){
                     rootNodeList.push(iNode);
                 }
             });
@@ -130,10 +138,10 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
 
         function getParentNode(nodeList, node){
             if(node != null){
-                if(node.parent.toString() != "0"){
+                if(node[fsConfig.options.parentNodeRef].toString() != "0"){
                     var parentNode ;
                     for (var key in nodeList) {
-                        if(node.parent.toString() === nodeList[key].id.toString()){
+                        if(node[fsConfig.options.parentNodeRef].toString() === nodeList[key][fsConfig.options.nodeId].toString()){
                             return nodeList[key];
                         }
                     }
@@ -160,11 +168,11 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
         function getChildrenNodeList(nodeList, node){
             var childrenNodeList = [];
             nodeList.forEach(function(iNode){
-                if(!iNode.__isFakeNode__ && iNode.parent.toString() === node.id.toString()){
+                if(!iNode.__isFakeNode__ && iNode[fsConfig.options.parentNodeRef].toString() === node[fsConfig.options.nodeId].toString()){
                     childrenNodeList.push(iNode);
                 }
             });
-            return appendWithPwdPointer(childrenNodeList,node.id.toString());
+            return appendWithPwdPointer(childrenNodeList,node[fsConfig.options.nodeId].toString());
         }
     })
 

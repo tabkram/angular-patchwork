@@ -1,3 +1,16 @@
+<ul id="pw-fsexplorer" {{options.ulClass}} >
+	<li ng-click="backToParent()">
+	<button>back</button>
+	</li>
+	<li ng-repeat="node in nodeList" ng-class="headClass(node)"> 
+		<i class="tree-branch-head" ng-class="iBranchClass()" ng-click="selectNodeHead(node)"></i>
+		<div class="tree-label {{options.labelClass}}" ng-click="selectNodeLabel(node)">
+			<pw-node-transclude></pw-node-transclude>
+		</div>  
+	</li> 
+</ul>
+
+<style type="text/css">
 #pw-fsexplorer div {
   width: 200px;
 }
@@ -17,8 +30,6 @@
 #pw-fsexplorer li {
   font: 200 20px/1.5 Helvetica, Verdana, sans-serif;
   border-bottom: 1px solid #ccc;
-  display: table-row;
-  cursor: pointer;
 }
  
 #pw-fsexplorer li:last-child {
@@ -42,3 +53,4 @@
   font-size: 30px;
   background: #f6f6f6;
 }	
+</style>
