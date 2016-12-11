@@ -18,6 +18,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     explorerOptions: "=",
                     templateUrl:"=",
                     onNodeClick:"=",
+                    onPathChange:"=",
                     isClickable:"="
                 },
                 link: function($scope, element, attrs, ctrl, transclude){
@@ -42,13 +43,32 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     });
                 },
                 controller($scope){
+                    var context = {
+                        selectedNode: null,
+                        currentPath:[]
+                    };
                     if($scope.explorerOptions) {
                         fsConfig.options = $scope.explorerOptions ;
                     }
-                    $scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
+                    var explorerModel = $scope.explorerModel;
+                    $scope.$watch("explorerModel",function(newModel){
+                        explorerModel = newModel ;
+                        if(context.currentPath.length>0){
+                            $scope.nodeList = fsExplorerService.getChildrenNodeList(explorerModel,context.currentPath[context.currentPath.length - 1]);
+                        } else {
+                            $scope.nodeList = fsExplorerService.getRootNodeList(explorerModel);
+                        }
+                    },true);
+                    $scope.nodeList = fsExplorerService.getRootNodeList(explorerModel);
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
-                            $scope.nodeList = fsExplorerService.getNodeListInParentFolder($scope.explorerModel,$scope.nodeList[0]);    
+                            $scope.nodeList = fsExplorerService.getNodeListInParentFolder(explorerModel,$scope.nodeList[0]);
+                            if(context.currentPath.length>0){
+                                context.currentPath.splice([context.currentPath.length - 1],1);
+                            }
+                            if($scope.onPathChange){
+                                    $scope.onPathChange(context.currentPath);
+                            }
                         } else {
                             log.error("error: it should have at least pwdPointer");
                         }
@@ -57,9 +77,14 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     $scope.selectNodeLabel = function(node){
                         if(angular.isUndefined($scope.isClickable)|| (angular.isDefined($scope.isClickable) && $scope.isClickable(node) === true)){
                             if(!node.__isFakeNode__){
-                                $scope.nodeList = fsExplorerService.getChildrenNodeList($scope.explorerModel,node);
+                                $scope.nodeList = fsExplorerService.getChildrenNodeList(explorerModel,node);
+                                context.selectedNode = node;
+                                context.currentPath.push(node);
                                 if ($scope.onNodeClick) {
                                     $scope.onNodeClick(node);
+                                }
+                                if($scope.onPathChange){
+                                    $scope.onPathChange(context.currentPath);
                                 }
                             }
                         }

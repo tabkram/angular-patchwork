@@ -42,7 +42,7 @@
 			{
 				nodeID: 12,
 				type:"file",
-				name: "folder12",
+				name: "file12",
 				parentID: "1",
 			},
 			{
@@ -62,9 +62,40 @@
 		smCtrl.clickedNode = function(node){
 			smCtrl.selectedNode = node;
 		}
+
+		smCtrl.changedPath = function(currentPath){
+			smCtrl.currentPath = currentPath;
+		}
 		
 		smCtrl.isClickable = function(node){
 			return (node.type === 'folder');
+		}
+
+		smCtrl.addFolder = function(){
+			var parent = 0 ;
+			if(smCtrl.currentPath[smCtrl.currentPath.length - 1]){
+				var parent =  smCtrl.currentPath[smCtrl.currentPath.length - 1].nodeID ;
+			}
+			smCtrl.model.push({
+				nodeID: smCtrl.newNode,
+				type:"folder",
+				name: smCtrl.newNode,
+				parentID: parent,
+			});
+			console.log("smCtrl.model",smCtrl.model);
+		}
+		smCtrl.addFile = function(){
+			var parent = 0 ;
+			if(smCtrl.currentPath[smCtrl.currentPath.length - 1]){
+				var parent =  smCtrl.currentPath[smCtrl.currentPath.length - 1].nodeID ;
+			}
+			smCtrl.model.push({
+				nodeID: smCtrl.newNode,
+				type:"file",
+				name: smCtrl.newNode,
+				parentID: parent
+			});
+			console.log("smCtrl.model",smCtrl.model);
 		}
 		return smCtrl ;
 	}
