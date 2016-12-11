@@ -45,7 +45,6 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     if($scope.explorerOptions) {
                         fsConfig.options = $scope.explorerOptions ;
                     }
-                    console.log("efzef", fsConfig.options);
                     $scope.nodeList = fsExplorerService.getRootNodeList($scope.explorerModel);
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
