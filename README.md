@@ -9,6 +9,4 @@
 * [form field](https://github.com/tabkram/angular-patchwork/blob/master/src/formfield/README.md)
 
 ---
-Build with :coffee: by [Akram](https://github.com/tabkram)
-
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.png?v=103)](https://opensource.org/licenses/mit-license.php)  
+Build with :coffee: by [tabkram](https://github.com/tabkram)
