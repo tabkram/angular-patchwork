@@ -170,7 +170,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                 if(node[fsConfig.options.parentNodeRef].toString() != "0"){
                     var parentNode ;
                     for (var key in nodeList) {
-                        if(node[fsConfig.options.parentNodeRef].toString() === nodeList[key][fsConfig.options.nodeId].toString()){
+                        if(nodeList[key][fsConfig.options.nodeId] && node[fsConfig.options.parentNodeRef].toString() === nodeList[key][fsConfig.options.nodeId].toString()){
                             return nodeList[key];
                         }
                     }
