@@ -6,7 +6,10 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
         templateUrl: null,
         options : {
             nodeId: "id",
-            parentNodeRef: "parent"
+            parentNodeRef: "parent",
+            isAccessibleNode: function(node){
+                return true;
+            }
         }
     })
     .directive('pwFsexplorer', function($compile, $templateCache, fsExplorerService, fsConfig, $http) {
@@ -42,13 +45,15 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                         scope.transcludedElement = angular.element('<div></div>').append(clone).html();
                     });
                 },
-                controller($scope){
+                controller: function($scope){
                     var context = {
                         selectedNode: null,
                         currentPath:[]
                     };
                     if($scope.explorerOptions) {
-                        fsConfig.options = $scope.explorerOptions ;
+                        for (var prop in $scope.explorerOptions) {
+                                fsConfig.options[prop] = $scope.explorerOptions[prop];
+                        }
                     }
                     var explorerModel = $scope.explorerModel;
                     $scope.$watch("explorerModel",function(newModel){
@@ -76,16 +81,16 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
 
                     $scope.selectNodeLabel = function(node){
                         if(angular.isUndefined($scope.isClickable)|| (angular.isDefined($scope.isClickable) && $scope.isClickable(node) === true)){
-                            if(!node.__isFakeNode__){
+                            if(!node.__isFakeNode__ && fsConfig.options.isAccessibleNode(node)===true){
                                 $scope.nodeList = fsExplorerService.getChildrenNodeList(explorerModel,node);
                                 context.selectedNode = node;
                                 context.currentPath.push(node);
-                                if ($scope.onNodeClick) {
-                                    $scope.onNodeClick(node);
-                                }
                                 if($scope.onPathChange){
                                     $scope.onPathChange(context.currentPath);
                                 }
+                            }
+                            if ($scope.onNodeClick) {
+                                $scope.onNodeClick(node);
                             }
                         }
                     }

@@ -31,7 +31,7 @@
 		 			   on-node-click="exampleCtrl.clickedNode" 
 		 			   is-clickable="exampleCtrl.isClickable">
 			<span ng-show="node.type=='folder'" class="glyphicon glyphicon-folder-close"></span>
-			<span ng-show="node.type!='folder' && !node.__isFakeNode__" class="glyphicon glyphicon-file"></span>
+			<span ng-show="node.type!='folder'" class="glyphicon glyphicon-file"></span>
 			 <span>{{node.name}}</span>
 			</pwFsexplorer>
 		</div>

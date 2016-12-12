@@ -1,8 +1,8 @@
 <div class="list-group">
   <a  ng-click="backToParent()" class="list-group-item">
-    back
+   <i class="glyphicon glyphicon-arrow-left"/> back
   </a>
-  <a ng-repeat="node in nodeList" ng-class="headClass(node)" class="list-group-item">
+  <a ng-repeat="node in nodeList"  ng-if="!node.__isFakeNode__" ng-class="headClass(node)" class="list-group-item">
     <i class="tree-branch-head" ng-class="iBranchClass()" ng-click="selectNodeHead(node)"></i>
     <div class="tree-label {{options.labelClass}}" ng-click="selectNodeLabel(node)">
       <pw-node-transclude></pw-node-transclude>
