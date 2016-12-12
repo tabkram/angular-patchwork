@@ -7,12 +7,13 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
         options : {
             nodeId: "id",
             parentNodeRef: "parent",
+            sortBy: 'name',
             isAccessibleNode: function(node){
                 return true;
             }
         }
     })
-    .directive('pwFsexplorer', function($compile, $templateCache, fsExplorerService, fsConfig, $http) {
+    .directive('pwFsexplorer', function($compile, $filter, $templateCache, fsExplorerService, fsConfig, $http) {
         return {
             restrict: 'EA',
                 transclude: true,
@@ -59,15 +60,15 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     $scope.$watch("explorerModel",function(newModel){
                         explorerModel = newModel ;
                         if(context.currentPath.length>0){
-                            $scope.nodeList = fsExplorerService.getChildrenNodeList(explorerModel,context.currentPath[context.currentPath.length - 1]);
+                            $scope.nodeList = $filter('orderBy')(fsExplorerService.getChildrenNodeList(explorerModel,context.currentPath[context.currentPath.length - 1]), fsConfig.options.sortBy);
                         } else {
-                            $scope.nodeList = fsExplorerService.getRootNodeList(explorerModel);
+                            $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);
                         }
                     },true);
-                    $scope.nodeList = fsExplorerService.getRootNodeList(explorerModel);
+                    $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
-                            $scope.nodeList = fsExplorerService.getNodeListInParentFolder(explorerModel,$scope.nodeList[0]);
+                            $scope.nodeList = $filter('orderBy')(fsExplorerService.getNodeListInParentFolder(explorerModel,$scope.nodeList[0]), fsConfig.options.sortBy);
                             if(context.currentPath.length>0){
                                 context.currentPath.splice([context.currentPath.length - 1],1);
                             }
@@ -82,7 +83,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                     $scope.selectNodeLabel = function(node){
                         if(angular.isUndefined($scope.isClickable)|| (angular.isDefined($scope.isClickable) && $scope.isClickable(node) === true)){
                             if(!node.__isFakeNode__ && fsConfig.options.isAccessibleNode(node)===true){
-                                $scope.nodeList = fsExplorerService.getChildrenNodeList(explorerModel,node);
+                                $scope.nodeList = $filter('orderBy')(fsExplorerService.getChildrenNodeList(explorerModel,node), fsConfig.options.sortBy);
                                 context.selectedNode = node;
                                 context.currentPath.push(node);
                                 if($scope.onPathChange){
