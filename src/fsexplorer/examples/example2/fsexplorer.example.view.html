@@ -22,7 +22,7 @@
 		</div>
 		<div class="col-md-6">
 		<div>
-			Path: <b ng-repeat="pathstep in exampleCtrl.currentPath">/{{pathstep.name}}</b>
+			Path: <b ng-repeat="pathstep in exampleCtrl.currentPath">/ <a ng-click="exampleCtrl.selectNode(pathstep)">{{pathstep.name}} </a></b>
 		</div>
 		<pw-fsexplorer explorer-model="exampleCtrl.model"
 					   template-url="'./fsexplorer.example.template.html'"

@@ -8,6 +8,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
             nodeId: "id",
             parentNodeRef: "parent",
             sortBy: 'name',
+            defaultSelectedNode: null,
             isAccessibleNode: function(node){
                 return true;
             }
@@ -57,6 +58,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                                 fsConfig.options[prop] = $scope.explorerOptions[prop];
                         }
                     }
+
                     var explorerModel = $scope.explorerModel;
                     $scope.$watch("explorerModel",function(newModel){
                         explorerModel = newModel ;
@@ -66,7 +68,20 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                             $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);
                         }
                     },true);
-                    $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);
+
+                    $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);    
+                    
+                    $scope.$watch("explorerOptions.defaultSelectedNode",function(newNode){
+                                fsConfig.options.defaultSelectedNode  = angular.copy(newNode);
+                                if(fsConfig.options.defaultSelectedNode != null){
+                                   $scope.selectNodeLabel(fsConfig.options.defaultSelectedNode);
+                                   context.currentPath = fsExplorerService.getNodePath(explorerModel, fsConfig.options.defaultSelectedNode);
+                                   if($scope.onPathChange){
+                                        $scope.onPathChange(context.currentPath);
+                                   }
+                                }
+                    },true);
+
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
                             $scope.nodeList = $filter('orderBy')(fsExplorerService.getNodeListInParentFolder(explorerModel,$scope.nodeList[0]), fsConfig.options.sortBy);
@@ -126,7 +141,8 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
             getParentNode: getParentNode,
             getRootNodeList: getRootNodeList,
             getNodeListInParentFolder: getNodeListInParentFolder,
-            getChildrenNodeList: getChildrenNodeList
+            getChildrenNodeList: getChildrenNodeList,
+            getNodePath: getNodePath
         }
 
         function findNodeBy(NodeList,predicate){
@@ -212,6 +228,18 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
             });
             return appendWithPwdPointer(childrenNodeList,node[fsConfig.options.nodeId].toString());
         }
+
+        function getNodePath(nodeList, node){
+            var path = [];
+            if(node[fsConfig.options.parentNodeRef].toString() != "0"){
+                path =  getNodePath(nodeList, getParentNode(nodeList,node));
+                path.push(node);
+                return path;
+            } else {
+                path.push(node);
+                return path;
+            }
+        };
     })
 
             angular.module("template/explorerTpl.html", []).run(["$templateCache", function($templateCache) {
@@ -227,3 +255,6 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
             }]);
 
 })();
+
+
+

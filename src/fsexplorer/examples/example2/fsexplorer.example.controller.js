@@ -59,6 +59,9 @@
 			}
 		]
 
+		smCtrl.selectNode = function(node){
+			smCtrl.options.defaultSelectedNode = node;
+		}
 		smCtrl.clickedNode = function(node){
 			smCtrl.selectedNode = node;
 		}
