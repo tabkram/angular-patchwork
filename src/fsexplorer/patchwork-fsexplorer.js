@@ -8,7 +8,7 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
             nodeId: "id",
             parentNodeRef: "parent",
             sortBy: 'name',
-            defaultSelectedNode: null,
+            selectedNode: null,
             isAccessibleNode: function(node){
                 return true;
             }
@@ -71,25 +71,28 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
 
                     $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);    
                     
-                    $scope.$watch("explorerOptions.defaultSelectedNode",function(newNode){
-                                fsConfig.options.defaultSelectedNode  = angular.copy(newNode);
-                                if(fsConfig.options.defaultSelectedNode != null){
-                                   $scope.selectNodeLabel(fsConfig.options.defaultSelectedNode);
-                                   context.currentPath = fsExplorerService.getNodePath(explorerModel, fsConfig.options.defaultSelectedNode);
-                                   if($scope.onPathChange){
-                                        $scope.onPathChange(context.currentPath);
-                                   }
+                    $scope.$watch("explorerOptions.selectedNode",function(newNode){
+                                fsConfig.options.selectedNode  = angular.copy(newNode);
+                                if(fsConfig.options.selectedNode != null){
+                                   $scope.selectNodeLabel(fsConfig.options.selectedNode);
+                                   context.currentPath = fsExplorerService.getNodePath(explorerModel, fsConfig.options.selectedNode);
                                 }
                     },true);
+
+                    $scope.$watch(function(){
+                        return context.currentPath;
+                    },function(newPath){
+                        fsConfig.options.selectedNode = newPath[newPath.length];
+                        if($scope.onPathChange){
+                            $scope.onPathChange(newPath);
+                        }
+                    });
 
                     $scope.backToParent = function(){
                         if($scope.nodeList.length>0){
                             $scope.nodeList = $filter('orderBy')(fsExplorerService.getNodeListInParentFolder(explorerModel,$scope.nodeList[0]), fsConfig.options.sortBy);
                             if(context.currentPath.length>0){
                                 context.currentPath.splice([context.currentPath.length - 1],1);
-                            }
-                            if($scope.onPathChange){
-                                    $scope.onPathChange(context.currentPath);
                             }
                         } else {
                             log.error("error: it should have at least pwdPointer");
@@ -109,9 +112,6 @@ angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
                                 $scope.nodeList = $filter('orderBy')(fsExplorerService.getChildrenNodeList(explorerModel,node), fsConfig.options.sortBy);
                                 context.selectedNode = node;
                                 context.currentPath.push(node);
-                                if($scope.onPathChange){
-                                    $scope.onPathChange(context.currentPath);
-                                }
                             }
                             if ($scope.onNodeClick) {
                                 $scope.onNodeClick(node);
