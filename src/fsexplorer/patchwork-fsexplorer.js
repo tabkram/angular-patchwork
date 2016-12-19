@@ -8,6 +8,7 @@
                 nodeId: "id",
                 parentNodeRef: "parent",
                 sortBy: 'name',
+                searchBy: {},
                 selectedNode: null,
                 isAccessibleNode: function(node){
                     return true;
@@ -59,14 +60,18 @@
                         }
                     }
 
-                    var explorerModel = $scope.explorerModel;
-                    $scope.$watch("explorerModel",function(newModel){
-                        explorerModel = newModel ;
+                    function refreshExplorer(){
                         if(context.currentPath.length>0){
                             $scope.nodeList = $filter('orderBy')(fsExplorerService.getChildrenNodeList(explorerModel,context.currentPath[context.currentPath.length - 1]), fsConfig.options.sortBy);
                         } else {
                             $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);
                         }
+                    }
+
+                    var explorerModel = $scope.explorerModel;
+                    $scope.$watch("explorerModel",function(newModel){
+                        explorerModel = newModel ;
+                        refreshExplorer();
                     },true);
 
                     $scope.nodeList = $filter('orderBy')(fsExplorerService.getRootNodeList(explorerModel), fsConfig.options.sortBy);
@@ -76,6 +81,22 @@
                         if(fsConfig.options.selectedNode != null){
                             $scope.selectNodeLabel(fsConfig.options.selectedNode);
                         }
+                    },true);
+
+                    $scope.$watch("explorerOptions.searchBy",function(newSearchConf){
+                        explorerModel = [];
+                        $scope.explorerModel.forEach(function(node){
+                            var isMatching = true;
+                            for (var prop in newSearchConf) {
+                                if(!node[prop] || !node[prop].includes(newSearchConf[prop])){
+                                    isMatching = false;
+                                }
+                            }
+                            if(isMatching === true){
+                                explorerModel.push(node)    
+                            }
+                        });
+                        refreshExplorer();
                     },true);
 
                     $scope.$watch(function(){

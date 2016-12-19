@@ -12,8 +12,10 @@
 		var smCtrl = this ;
 		smCtrl.options = {
 			nodeId: "nodeID",
-			parentNodeRef:"parentID"
+			parentNodeRef:"parentID",
+			searchBy : {}
 		}
+
 		smCtrl.model = [
 			{
 				nodeID: 1, 
