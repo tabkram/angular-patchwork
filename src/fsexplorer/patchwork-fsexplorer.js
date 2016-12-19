@@ -9,6 +9,7 @@
                 parentNodeRef: "parent",
                 sortBy: 'name',
                 searchBy: {},
+                isGlobalSearch : true,
                 selectedNode: null,
                 isAccessibleNode: function(node){
                     return true;
@@ -68,6 +69,10 @@
                         }
                     }
 
+                    function refreshFlatExplorer(){
+                        $scope.nodeList = $filter('orderBy')(explorerModel, fsConfig.options.sortBy);
+                    }
+
                     var explorerModel = $scope.explorerModel;
                     $scope.$watch("explorerModel",function(newModel){
                         explorerModel = newModel ;
@@ -83,20 +88,32 @@
                         }
                     },true);
 
-                    $scope.$watch("explorerOptions.searchBy",function(newSearchConf){
-                        explorerModel = [];
-                        $scope.explorerModel.forEach(function(node){
-                            var isMatching = true;
-                            for (var prop in newSearchConf) {
-                                if(!node[prop] || !node[prop].includes(newSearchConf[prop])){
-                                    isMatching = false;
+                    $scope.$watch(function(){
+                        return {
+                            by: $scope.explorerOptions.searchBy,
+                            isGlobal : $scope.explorerOptions.isGlobalSearch
+                        }
+                    },
+                    function(newSearchConf){
+                        if(Object.keys(newSearchConf.by).length != 0){
+                            explorerModel = [];
+                            $scope.explorerModel.forEach(function(node){
+                                var isMatching = true;
+                                for (var prop in newSearchConf.by) {
+                                    if(!node[prop] || !node[prop].includes(newSearchConf.by[prop])){
+                                        isMatching = false;
+                                    }
                                 }
+                                if(isMatching === true){
+                                    explorerModel.push(node)    
+                                }
+                            });
+                            if (newSearchConf.isGlobal === true){
+                                refreshFlatExplorer();    
+                            } else {
+                                refreshExplorer();    
                             }
-                            if(isMatching === true){
-                                explorerModel.push(node)    
-                            }
-                        });
-                        refreshExplorer();
+                        }
                     },true);
 
                     $scope.$watch(function(){

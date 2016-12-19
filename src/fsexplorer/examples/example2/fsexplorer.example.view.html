@@ -24,6 +24,7 @@
 		<div>
 			Path: <b ng-repeat="pathstep in exampleCtrl.currentPath">/ <a ng-click="exampleCtrl.selectNode(pathstep)">{{pathstep.name}} </a></b>
 		</div>
+		<input type="checkbox" name="globalsearch" ng-model="exampleCtrl.options.isGlobalSearch"> Global search<br>
 		<input type="input" placeholder="search" ng-model="exampleCtrl.options.searchBy.name">
 		<pw-fsexplorer explorer-model="exampleCtrl.model"
 					   template-url="'./fsexplorer.example.template.html'"

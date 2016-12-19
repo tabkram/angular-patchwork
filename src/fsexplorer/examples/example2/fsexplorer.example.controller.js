@@ -13,6 +13,7 @@
 		smCtrl.options = {
 			nodeId: "nodeID",
 			parentNodeRef:"parentID",
+			isGlobalSearch: false,
 			searchBy : {}
 		}
 
