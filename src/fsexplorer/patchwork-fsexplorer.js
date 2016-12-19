@@ -89,32 +89,45 @@
                     },true);
 
                     $scope.$watch(function(){
-                        return {
-                            by: $scope.explorerOptions.searchBy,
-                            isGlobal : $scope.explorerOptions.isGlobalSearch
-                        }
-                    },
-                    function(newSearchConf){
-                        if(Object.keys(newSearchConf.by).length != 0){
-                            explorerModel = [];
-                            $scope.explorerModel.forEach(function(node){
-                                var isMatching = true;
-                                for (var prop in newSearchConf.by) {
-                                    if(!node[prop] || !node[prop].includes(newSearchConf.by[prop])){
-                                        isMatching = false;
+                            return {
+                                by: $scope.explorerOptions.searchBy,
+                                isGlobal : $scope.explorerOptions.isGlobalSearch
+                            }
+                        },
+                        function(newSearchConf){
+                            $scope.isSearchActive = (newSearchConf.by && (Object.keys(newSearchConf.by).length != 0) && (function(){
+                                for (var prop in newSearchConf.by){
+                                    if(newSearchConf.by[prop] != ""){
+                                        return true;
                                     }
                                 }
-                                if(isMatching === true){
-                                    explorerModel.push(node)    
+                                return false;
+                            })());
+                            
+                            if(Object.keys(newSearchConf.by).length != 0){
+                                explorerModel = [];
+                                var isEmpty = true;
+                                $scope.explorerModel.forEach(function(node){
+                                    var isMatching = true;
+                                    for (var prop in newSearchConf.by) {
+                                        if(!node[prop] || !node[prop].toString().includes(newSearchConf.by[prop])){
+                                            isMatching = false;
+                                        }
+                                        if (newSearchConf.by[prop].toString() != ""){
+                                            isEmpty = false;
+                                        }
+                                    }
+                                    if(isMatching === true){
+                                        explorerModel.push(node)
+                                    }
+                                });
+                                if (newSearchConf.isGlobal === true && !isEmpty){
+                                    refreshFlatExplorer();
+                                } else {
+                                    refreshExplorer();
                                 }
-                            });
-                            if (newSearchConf.isGlobal === true){
-                                refreshFlatExplorer();    
-                            } else {
-                                refreshExplorer();    
                             }
-                        }
-                    },true);
+                        },true);
 
                     $scope.$watch(function(){
                         return context.currentPath;
