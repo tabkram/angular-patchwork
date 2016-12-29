@@ -1,13 +1,13 @@
 (function() {
-    'use strict';
+    "use strict";
 
-    angular.module('pw-fsexplorer', ["template/explorerTpl.html"])
+    angular.module("pw-fsexplorer", ["template/explorerTpl.html"])
         .constant('fsConfig', {
             templateUrl: null,
             options : {
                 nodeId: "id",
                 parentNodeRef: "parent",
-                sortBy: 'name',
+                sortBy: "name",
                 searchBy: {},
                 isGlobalSearch : true,
                 selectedNode: null,
@@ -103,7 +103,7 @@
                                 }
                                 return false;
                             })());
-                            
+
                             if(Object.keys(newSearchConf.by).length != 0){
                                 explorerModel = [];
                                 var isEmpty = true;
@@ -165,6 +165,8 @@
                             }
                             if ($scope.onNodeClick) {
                                 $scope.onNodeClick(node);
+                                //context.selectedNode = node;
+                                //context.currentPath = fsExplorerService.getNodePath($scope.explorerModel, node);
                             }
                         }
                     }
@@ -281,7 +283,7 @@
 
             function getNodePath(nodeList, node){
                 var path = [];
-                if(node[fsConfig.options.parentNodeRef].toString() != "0"){
+                if(node[fsConfig.options.parentNodeRef] && node[fsConfig.options.parentNodeRef].toString() != "0"){
                     path =  getNodePath(nodeList, getParentNode(nodeList,node));
                     path.push(node);
                     return path;
